@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:impresora/clases/class_impresora.dart';
 import 'package:impresora/widgets/text_field_widget.dart';
-import 'package:provider/provider.dart';
 
 class FormularioView extends StatelessWidget {
   FormularioView({Key key}) : super(key: key);

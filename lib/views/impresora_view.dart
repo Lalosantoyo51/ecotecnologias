@@ -5,7 +5,11 @@ import 'package:bluetooth_print/bluetooth_print_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:impresora/clases/class_impresora.dart';
-import 'package:provider/provider.dart';
+import 'package:intl/intl.dart';  //for date format
+import 'package:intl/date_symbol_data_local.dart';  //for date locale
+
+
+
 
 class ImpresoraView extends StatefulWidget {
   const ImpresoraView({Key key}) : super(key: key);
@@ -23,6 +27,9 @@ class _ImpresoraViewState extends State<ImpresoraView> {
 
   @override
   void initState() {
+    initializeDateFormatting();
+    print('${DateFormat.Hms('es').format(DateTime.now())}');
+
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) => initBluetooth());
   }
@@ -147,15 +154,22 @@ class _ImpresoraViewState extends State<ImpresoraView> {
                         ByteData data = await rootBundle.load("assets/logo.png",);
                         List<int> imageBytes = data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes);
                         String base64Image = base64Encode(imageBytes);
+
                         list.add(LineText(type: LineText.TYPE_IMAGE, content: base64Image, align: LineText.ALIGN_RIGHT, linefeed: 1,height: 500,width:375));
+                        list.add(LineText(type: LineText.TYPE_TEXT, content: 'Direccion: ', weight: 0, align: LineText.ALIGN_LEFT,));
+                        list.add(LineText(type: LineText.TYPE_TEXT, content: 'Carr. Manzanillo-Chandiablo #166, Plaza Alta  L-4 Fracc. Los Altos', weight: 0, align: LineText.ALIGN_LEFT,linefeed: 1));
+                        list.add(LineText(linefeed: 1));
 
-                        //ByteData data = await rootBundle.load("assets/logo.jpeg");
-                        //List<int> imageBytes = data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes);
-                        //String base64Image = base64Encode(imageBytes);
-                        //list.add(LineText(type: LineText.TYPE_IMAGE, content: base64Image, align: LineText.ALIGN_LEFT, linefeed: 1));
-                        //list.add(LineText(linefeed: 1));
-
-                        list.add(LineText(type: LineText.TYPE_TEXT, content: 'Comrpobante', weight: 1, align: LineText.ALIGN_CENTER,linefeed: 1));
+                        list.add(LineText(type: LineText.TYPE_TEXT, content: 'Telefono: ', weight: 0, align: LineText.ALIGN_LEFT,));
+                        list.add(LineText(type: LineText.TYPE_TEXT, content: '3141655251', weight: 0, align: LineText.ALIGN_LEFT,linefeed: 1));
+                        list.add(LineText(linefeed: 1));
+                        list.add(LineText(type: LineText.TYPE_TEXT, content: 'Fecha:', weight: 0, align: LineText.ALIGN_LEFT,));
+                        list.add(LineText(type: LineText.TYPE_TEXT, content: '${DateFormat.yMMMMEEEEd('es').format(DateTime.now())}', weight: 0, align: LineText.ALIGN_LEFT,linefeed: 1));
+                        list.add(LineText(linefeed: 1));
+                        list.add(LineText(type: LineText.TYPE_TEXT, content: 'Hora:', weight: 0, align: LineText.ALIGN_LEFT,));
+                        list.add(LineText(type: LineText.TYPE_TEXT, content: '${DateFormat.Hms('es').format(DateTime.now())}', weight: 0, align: LineText.ALIGN_LEFT,linefeed: 1));
+                        list.add(LineText(linefeed: 1));
+                        list.add(LineText(type: LineText.TYPE_TEXT, content: 'Comprobante', weight: 1, align: LineText.ALIGN_CENTER,linefeed: 1));
                         list.add(LineText(linefeed: 1));
                         list.add(LineText(type: LineText.TYPE_TEXT, content: 'Folio: ', weight: 0, align: LineText.ALIGN_LEFT,));
                         list.add(LineText(type: LineText.TYPE_TEXT, content: '${imprimir.folio}', weight: 0, align: LineText.ALIGN_LEFT,linefeed: 1));
@@ -170,12 +184,7 @@ class _ImpresoraViewState extends State<ImpresoraView> {
                         list.add(LineText(type: LineText.TYPE_TEXT, content: 'Comentario ', weight: 0, align: LineText.ALIGN_LEFT,));
                         list.add(LineText(type: LineText.TYPE_TEXT, content: '${imprimir.coment}', weight: 0, align: LineText.ALIGN_LEFT,linefeed: 1));
                         list.add(LineText(linefeed: 1));
-                        list.add(LineText(type: LineText.TYPE_TEXT, content: 'Direccion: ', weight: 0, align: LineText.ALIGN_LEFT,));
-                        list.add(LineText(type: LineText.TYPE_TEXT, content: 'Carr. Manzanillo-Chandiablo #166, Plaza Alta  L-4 Fracc. Los Altos', weight: 0, align: LineText.ALIGN_LEFT,linefeed: 1));
-                        list.add(LineText(linefeed: 1));
-                        list.add(LineText(type: LineText.TYPE_TEXT, content: 'Telefono: ', weight: 0, align: LineText.ALIGN_LEFT,));
-                        list.add(LineText(type: LineText.TYPE_TEXT, content: '3141655251', weight: 0, align: LineText.ALIGN_LEFT,linefeed: 1));
-                        list.add(LineText(linefeed: 1));
+
 
 
                         await bluetoothPrint.printReceipt(config, list);
